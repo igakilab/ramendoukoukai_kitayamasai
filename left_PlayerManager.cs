@@ -3,9 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using System;
+using System.Linq;
+using Unity.VisualScripting;
 
 public class left_PlayerManager : MonoBehaviour
 {
+    private List<Joycon> m_joycons;
+    private Joycon m_joyconL;
+    private Joycon m_joyconR;
+    private Joycon.Button? m_pressedButtonL;
+    private Joycon.Button? m_pressedButtonR;
+
+    private static readonly Joycon.Button[] m_buttons =
+        Enum.GetValues(typeof(Joycon.Button)) as Joycon.Button[];
+
     public float moveSpeed = 3f; // 移動速度
     public float attackRadius; // 攻撃範囲
     public Transform highShotPoint; // 高い位置のショットポイント
@@ -39,19 +51,27 @@ public class left_PlayerManager : MonoBehaviour
         animator = GetComponent<Animator>(); // Animatorを取得
         HealthSetGauge(1f); // HpGaugeの初期化
         CriticalSetGauge(0f);
+
+        m_joycons = JoyconManager.Instance.j;
+
+        if (m_joycons == null || m_joycons.Count <= 0) return;
+
+        m_joyconL = m_joycons.Find(c => c.isLeft);
+        m_joyconR = m_joycons.Find(c => !c.isLeft);
     }
 
     private void Update()
     {
+        JoyControll();
         Movement(); // 移動処理
         Shot(); // ショット処理
         Jump(); // ジャンプ処理
         Guard(); // ガード処理
     }
 
-    void Movement()
+    void Movement_1()
     {
-        float x = Input.GetAxisRaw("Horizontal"); // 方向キー横の入力を取得
+        float x = Input.GetAxis("JoystickHorizontal"); // 方向キー横の入力を取得
         if (!isRight && x > 0)
         {
             transform.Rotate(0f, 180f, 0f); // 右向きに回転
@@ -66,16 +86,44 @@ public class left_PlayerManager : MonoBehaviour
         rb.velocity = new Vector2(x * moveSpeed, rb.velocity.y); // 移動速度を設定
     }
 
+    void Movement()
+    {
+        // Joy-Conのスティック入力を取得
+        float x = 0f;
+        //if (m_joyconL != null)
+        //{
+        //    x += m_joyconL.GetStick()[0]; // 左Joy-Conの横軸入力を取得
+        //}
+        if (m_joyconL != null)
+        {
+            x += m_joyconL.GetStick()[0]; // 右Joy-Conの横軸入力を取得
+        }
+
+        if (!isRight && x < 0)
+        {
+            transform.Rotate(0f, 180f, 0f); // 右向きに回転
+            isRight = true;
+        }
+        if (isRight && x > 0)
+        {
+            transform.Rotate(0f, 180f, 0f); // 左向きに回転
+            isRight = false;
+        }
+
+        animator.SetFloat("Speed", Mathf.Abs(x)); // アニメーションの速度を設定
+        rb.velocity = new Vector2(x * moveSpeed, rb.velocity.y); // 移動速度を設定
+    }
+
     void Shot()
     {
         leftCoolTime -= Time.deltaTime;
         float flag = 0;
-        if (Input.GetKeyDown(KeyCode.M) && Input.GetKey("up"))
+        if (m_joyconL.GetButton(Joycon.Button.DPAD_RIGHT))
         {
             shotPoint = highShotPoint; // 高い位置からショット
             flag = 1;
         }
-        if (Input.GetKeyDown(KeyCode.M) && Input.GetKey("down"))
+        if (m_joyconL.GetButton(Joycon.Button.DPAD_DOWN))
         {
             shotPoint = lowShotPoint; // 低い位置からショット
             flag = 1;
@@ -110,12 +158,12 @@ public class left_PlayerManager : MonoBehaviour
     {
         float flag = 0;
 
-        if (Input.GetKey(KeyCode.B) && Input.GetKey("up"))
+        if (m_joyconL.GetButton(Joycon.Button.DPAD_UP))
         {
             shotPoint = highShotPoint; // 高い位置でガード
             flag = 1;
         }
-        if (Input.GetKey(KeyCode.B) && Input.GetKey("down"))
+        if (m_joyconL.GetButton(Joycon.Button.DPAD_LEFT))
         {
             shotPoint = lowShotPoint; // 低い位置でガード
             flag = 1;
@@ -137,6 +185,7 @@ public class left_PlayerManager : MonoBehaviour
         {
             Instantiate(deathEffectPrefab, transform.position, transform.rotation); // 死亡エフェクトを生成
             Destroy(gameObject); // プレイヤーオブジェクトを破壊
+            m_joyconL.SetRumble(160, 320, 0.6f, 200);
         }
     }
 
@@ -198,4 +247,86 @@ public class left_PlayerManager : MonoBehaviour
     {
         CriticalSetGauge(criticalcurrentRate + rate);
     }
+
+
+private void JoyControll()
+{
+    m_pressedButtonL = null;
+    m_pressedButtonR = null;
+
+    if (m_joycons == null || m_joycons.Count <= 0) return;
+
+    foreach (var button in m_buttons)
+    {
+        if (m_joyconL.GetButton(button))
+        {
+            m_pressedButtonL = button;
+        }
+        if (m_joyconR.GetButton(button))
+        {
+            m_pressedButtonR = button;
+        }
+    }
+
+    if (Input.GetKeyDown(KeyCode.Z))
+    {
+        m_joyconL.SetRumble(160, 320, 0.6f, 200);
+    }
+    if (Input.GetKeyDown(KeyCode.X))
+    {
+        m_joyconR.SetRumble(160, 320, 0.6f, 200);
+    }
+}
+
+
+    private void OnGUI()
+    {
+        var style = GUI.skin.GetStyle("label");
+        style.fontSize = 24;
+
+        if (m_joycons == null || m_joycons.Count <= 0)
+        {
+            GUILayout.Label("Joy-Con が接続されていません");
+            return;
+        }
+
+        if (!m_joycons.Any(c => c.isLeft))
+        {
+            GUILayout.Label("Joy-Con (L) が接続されていません");
+            return;
+        }
+
+        if (!m_joycons.Any(c => !c.isLeft))
+        {
+            GUILayout.Label("Joy-Con (R) が接続されていません");
+            return;
+        }
+
+        GUILayout.BeginHorizontal(GUILayout.Width(960));
+
+        foreach (var joycon in m_joycons)
+        {
+            var isLeft = joycon.isLeft;
+            var name = isLeft ? "Joy-Con (L)" : "Joy-Con (R)";
+            var key = isLeft ? "Z キー" : "X キー";
+            var button = isLeft ? m_pressedButtonL : m_pressedButtonR;
+            var stick = joycon.GetStick();
+            var gyro = joycon.GetGyro();
+            var accel = joycon.GetAccel();
+            var orientation = joycon.GetVector();
+
+            GUILayout.BeginVertical(GUILayout.Width(480));
+            GUILayout.Label(name);
+            GUILayout.Label(key + "：振動");
+            GUILayout.Label("押されているボタン：" + button);
+            GUILayout.Label(string.Format("スティック：({0}, {1})", stick[0], stick[1]));
+            GUILayout.Label("ジャイロ：" + gyro);
+            GUILayout.Label("加速度：" + accel);
+            GUILayout.Label("傾き：" + orientation);
+            GUILayout.EndVertical();
+        }
+
+        GUILayout.EndHorizontal();
+    }
+
 }
