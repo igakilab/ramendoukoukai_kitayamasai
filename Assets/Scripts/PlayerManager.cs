@@ -50,13 +50,13 @@ public class PlayerManager : MonoBehaviour
     void Shot()
     {
         float flag = 0;
-        if (Input.GetKeyDown(KeyCode.M) && Input.GetKey("up"))
+        if (Input.GetKeyDown(KeyCode.Joystick1Button0))
         {
             shotPoint = highShotPoint;
             bulletPrefab = bulletPrefabFire;
             flag = 1;
         }
-        if (Input.GetKeyDown(KeyCode.M) && Input.GetKey("down"))
+        if (Input.GetKeyDown(KeyCode.Joystick1Button1))
         {
             shotPoint = lowShotPoint;
             bulletPrefab = bulletPrefabFire;
