@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class left_MagicManager : MonoBehaviour
+public class right_MagicManager : MonoBehaviour
 {
     public float speed = -10f; // 弾の速度
     public float flag = 0;
@@ -16,7 +16,6 @@ public class left_MagicManager : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("衝突検出right"); // デバッグログを追加
         if (collision.CompareTag("shield"))
         {
             Debug.Log("ガード成功right");
@@ -24,23 +23,22 @@ public class left_MagicManager : MonoBehaviour
             transform.position = new Vector3(pos.x, pos.y, -100);
             flag = 1;
         }
-        if (collision.CompareTag("Player2"))
+        if (collision.CompareTag("Player1"))
         {
-            right_PlayerManager Player2 = collision.GetComponent<right_PlayerManager>(); // PlayerManagerを取得
+            left_PlayerManager Player1 = collision.GetComponent<left_PlayerManager>(); // PlayerManagerを取得
             Debug.Log("flag = " + flag);
             if (flag == 1)
             {
-                Player2.GuardClear(0.2f);
+                Player1.GuardClear(0.2f);
                 flag = 0;
             }
-            else if (flag == 0)
+            else if (flag == 0) 
             {
                 Debug.Log("攻撃right");
-                Player2.OnDamage(); // ダメージを与える
+                Player1.OnDamage(); // ダメージを与える
             }
             Destroy(gameObject); // 弾を破壊
         }
     }
 }
-
 
