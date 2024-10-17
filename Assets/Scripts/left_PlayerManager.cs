@@ -6,6 +6,7 @@ using DG.Tweening;
 using System;
 using System.Linq;
 using Unity.VisualScripting;
+using UnityEngine.SceneManagement;      //シーンの切り替えに必要
 
 public class left_PlayerManager : MonoBehaviour
 {
@@ -43,6 +44,8 @@ public class left_PlayerManager : MonoBehaviour
     private float criticalcurrentRate = 1f;
     Rigidbody2D rb;
     Animator animator;
+
+    public string SceneName;    //読み込むシーン名
 
 
     void Start()
@@ -186,6 +189,7 @@ public class left_PlayerManager : MonoBehaviour
             Instantiate(deathEffectPrefab, transform.position, transform.rotation); // 死亡エフェクトを生成
             Destroy(gameObject); // プレイヤーオブジェクトを破壊
             m_joyconL.SetRumble(160, 320, 0.6f, 200);
+            Load();
         }
     }
 
@@ -327,6 +331,12 @@ public class left_PlayerManager : MonoBehaviour
         }
 
         GUILayout.EndHorizontal();
+    }
+
+    //シーンを読み込む
+    public void Load()
+    {
+        SceneManager.LoadScene(SceneName);
     }
 
 }

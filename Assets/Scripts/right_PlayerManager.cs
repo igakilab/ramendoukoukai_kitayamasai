@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using UnityEngine.SceneManagement;      //シーンの切り替えに必要
 
 public class right_PlayerManager : MonoBehaviour
 {
@@ -33,6 +34,7 @@ public class right_PlayerManager : MonoBehaviour
     Rigidbody2D rb;
     Animator animator;
 
+    public string SceneName;    //読み込むシーン名
 
     void Start()
     {
@@ -138,6 +140,7 @@ public class right_PlayerManager : MonoBehaviour
         {
             Instantiate(deathEffectPrefab, transform.position, transform.rotation); // 死亡エフェクトを生成
             Destroy(gameObject); // プレイヤーオブジェクトを破壊
+            Load();
         }
     }
 
@@ -184,6 +187,12 @@ public class right_PlayerManager : MonoBehaviour
     public void GuardClear(float rate)
     {
         CriticalSetGauge(criticalcurrentRate + rate);
+    }
+
+    //シーンを読み込む
+    public void Load()
+    {
+        SceneManager.LoadScene(SceneName);
     }
 
 }
