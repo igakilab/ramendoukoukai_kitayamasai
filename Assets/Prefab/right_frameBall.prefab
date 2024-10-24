@@ -4835,7 +4835,7 @@ GameObject:
   - component: {fileID: 2261016492659382713}
   m_Layer: 0
   m_Name: right_frameBall
-  m_TagString: Untagged
+  m_TagString: right_magic
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5232,7 +5232,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startRotationX:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 3
       scalar: 0
       minScalar: 0
       maxCurve:
@@ -5285,7 +5285,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startRotationY:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 3
       scalar: 0
       minScalar: 0
       maxCurve:
@@ -9750,4 +9750,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d53cfaa82a7b9647839ec4db6749aea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: -10
+  speed: -8
+  flag: 0

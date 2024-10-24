@@ -16,7 +16,7 @@ public class left_MagicManager : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("shield"))
+        if (collision.CompareTag("right_shield"))
         {
             Debug.Log("ƒK[ƒh¬Œ÷right");
             Vector3 pos = rb.transform.position;
@@ -37,6 +37,12 @@ public class left_MagicManager : MonoBehaviour
                 Player2.OnDamage(); // ƒ_ƒ[ƒW‚ğ—^‚¦‚é
             }
             Destroy(gameObject); // ’e‚ğ”j‰ó
+        }
+        if (collision.CompareTag("right_magic"))
+        {
+            Debug.Log("–‚–@“¯m‚ªÕ“ËI");
+            Destroy(collision.gameObject); // ‰E‘¤‚Ì–‚–@’e‚ğ”j‰ó
+            Destroy(gameObject);           // ©•ª‚Ì–‚–@’e‚ğ”j‰ó
         }
     }
 }

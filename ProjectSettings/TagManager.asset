@@ -3,7 +3,13 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Player1
+  - Player2
+  - left_shield
+  - right_shield
+  - right_magic
+  - Dead
   layers:
   - Default
   - TransparentFX
