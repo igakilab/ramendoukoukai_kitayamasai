@@ -6,15 +6,6 @@ using DG.Tweening;
 
 public class right_PlayerManager : MonoBehaviour
 {
-    private List<Joycon> m_joycons;
-    private Joycon m_joyconL;
-    private Joycon m_joyconR;
-    private Joycon.Button? m_pressedButtonL;
-    private Joycon.Button? m_pressedButtonR;
-
-    //private static readonly Joycon.Button[] m_buttons =
-      //  Enum.GetValues(typeof(Joycon.Button)) as Joycon.Button[];
-
     public float moveSpeed = 3f; // 移動速度
     public float attackRadius; // 攻撃範囲
     public Transform highShotPoint; // 高い位置のショットポイント
@@ -49,25 +40,17 @@ public class right_PlayerManager : MonoBehaviour
         animator = GetComponent<Animator>(); // Animatorを取得
         HealthSetGauge(1f); // HpGaugeの初期化
         CriticalSetGauge(0f);
-
-        m_joycons = JoyconManager.Instance.j;
-
-        if (m_joycons == null || m_joycons.Count <= 0) return;
-
-        m_joyconL = m_joycons.Find(c => c.isLeft);
-        m_joyconR = m_joycons.Find(c => !c.isLeft);
     }
 
     private void Update()
     {
-        //JoyControll();
-        Movement(); // 移動処理
+        //Movement(); // 移動処理
         Shot(); // ショット処理
-        Jump(); // ジャンプ処理
+        //Jump(); // ジャンプ処理
         Guard(); // ガード処理
     }
 
-    void Movement_1()
+    void Movement()
     {
         float x = Input.GetAxisRaw("Horizontal"); // 方向キー横の入力を取得
         if (!isRight && x > 0)
@@ -84,44 +67,16 @@ public class right_PlayerManager : MonoBehaviour
         rb.velocity = new Vector2(x * moveSpeed, rb.velocity.y); // 移動速度を設定
     }
 
-    void Movement()
-    {
-        // Joy-Conのスティック入力を取得
-        float x = 0f;
-        //if (m_joyconL != null)
-        //{
-        //    x += m_joyconL.GetStick()[0]; // 左Joy-Conの横軸入力を取得
-        //}
-        if (m_joyconL != null)
-        {
-            x += m_joyconR.GetStick()[0]; // 右Joy-Conの横軸入力を取得
-        }
-
-        if (!isRight && x > 0)
-        {
-            transform.Rotate(0f, 180f, 0f); // 右向きに回転
-            isRight = true;
-        }
-        if (isRight && x < 0)
-        {
-            transform.Rotate(0f, 180f, 0f); // 左向きに回転
-            isRight = false;
-        }
-
-        animator.SetFloat("Speed", Mathf.Abs(x)); // アニメーションの速度を設定
-        rb.velocity = new Vector2(x * moveSpeed, rb.velocity.y); // 移動速度を設定
-    }
-
     void Shot()
     {
         leftCoolTime -= Time.deltaTime;
         float flag = 0;
-        if (m_joyconR.GetButton(Joycon.Button.DPAD_RIGHT))
+        if (Input.GetKeyDown(KeyCode.N) && Input.GetKey("up"))
         {
             shotPoint = highShotPoint; // 高い位置からショット
             flag = 1;
         }
-        if (m_joyconR.GetButton(Joycon.Button.DPAD_DOWN))
+        if (Input.GetKeyDown(KeyCode.N) && Input.GetKey("down"))
         {
             shotPoint = lowShotPoint; // 低い位置からショット
             flag = 1;
@@ -139,7 +94,7 @@ public class right_PlayerManager : MonoBehaviour
         Vector3 pos = rb.transform.position;
         if (jump_cnt < 2)
         {
-            if (m_joyconR.GetAccel()[0]>2)
+            if (Input.GetButtonDown("Jump"))
             {
                 animator.SetTrigger("jump"); // ジャンプアニメーションを再生
                 rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse); // ジャンプ力を加える
@@ -156,12 +111,12 @@ public class right_PlayerManager : MonoBehaviour
     {
         float flag = 0;
 
-        if (m_joyconR.GetButton(Joycon.Button.SHOULDER_1))
+        if (Input.GetKey(KeyCode.V) && Input.GetKey("up"))
         {
             shotPoint = highShotPoint; // 高い位置でガード
             flag = 1;
         }
-        if (m_joyconR.GetButton(Joycon.Button.SHOULDER_2))
+        if (Input.GetKey(KeyCode.V) && Input.GetKey("down"))
         {
             shotPoint = lowShotPoint; // 低い位置でガード
             flag = 1;
@@ -179,7 +134,6 @@ public class right_PlayerManager : MonoBehaviour
         Debug.Log("ダメージを受けた"); // デバッグログを追加
         hp -= 1; // ヒットポイントを減少
         TakeDamage(0.1f); // HpGaugeの更新
-        m_joyconR.SetRumble(160, 320, 0.6f, 200);
         if (hp <= 0)
         {
             Instantiate(deathEffectPrefab, transform.position, transform.rotation); // 死亡エフェクトを生成
@@ -231,8 +185,5 @@ public class right_PlayerManager : MonoBehaviour
     {
         CriticalSetGauge(criticalcurrentRate + rate);
     }
-    
-    
-    
-    
+
 }

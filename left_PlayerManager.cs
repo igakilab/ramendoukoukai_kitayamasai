@@ -21,11 +21,13 @@ public class left_PlayerManager : MonoBehaviour
     public float moveSpeed = 3f; // 移動速度
     public float attackRadius; // 攻撃範囲
     public Transform highShotPoint; // 高い位置のショットポイント
+    public Transform CriticalShotPoint;//必殺時のショットポイント
     public Transform lowShotPoint; // 低い位置のショットポイント
     public Transform shotPoint; // ショットポイント
     public GameObject deathEffectPrefab; // 死亡エフェクトのプレハブ
     public GameObject GuardObject; // ガードオブジェクト
     public GameObject bulletPrefab; // 弾のプレハブ
+    public GameObject CriticalbulletPrefab;//必殺のプレハブ
     public float jumpForce = 5f; // ジャンプ力
     public float jump_cnt = 0; // ジャンプ回数
     public bool isRight; // 右向きかどうか
@@ -64,7 +66,13 @@ public class left_PlayerManager : MonoBehaviour
     {
         JoyControll();
         Movement(); // 移動処理
-        Shot(); // ショット処理
+        if (m_joyconL != null)
+        {
+            Vector3 accel = m_joyconL.GetAccel();
+            DetectVerticalShake(accel);
+        }
+
+            Shot(); // ショット処理
         Jump(); // ジャンプ処理
         Guard(); // ガード処理
     }
@@ -141,7 +149,7 @@ public class left_PlayerManager : MonoBehaviour
         Vector3 pos = rb.transform.position;
         if (jump_cnt < 2)
         {
-            if (m_joyconL.GetAccel()[0]>2)
+            if (Input.GetButtonDown("Jump"))
             {
                 animator.SetTrigger("jump"); // ジャンプアニメーションを再生
                 rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse); // ジャンプ力を加える
@@ -158,12 +166,12 @@ public class left_PlayerManager : MonoBehaviour
     {
         float flag = 0;
 
-        if (m_joyconL.GetButton(Joycon.Button.SHOULDER_1))
+        if (m_joyconL.GetButton(Joycon.Button.DPAD_UP))
         {
             shotPoint = highShotPoint; // 高い位置でガード
             flag = 1;
         }
-        if (m_joyconL.GetButton(Joycon.Button.SHOULDER_2))
+        if (m_joyconL.GetButton(Joycon.Button.DPAD_LEFT))
         {
             shotPoint = lowShotPoint; // 低い位置でガード
             flag = 1;
@@ -181,12 +189,11 @@ public class left_PlayerManager : MonoBehaviour
         Debug.Log("ダメージを受けた"); // デバッグログを追加
         hp -= 1; // ヒットポイントを減少
         TakeDamage(0.1f); // HpGaugeの更新
-        m_joyconL.SetRumble(160, 320, 0.6f, 200);
         if (hp <= 0)
         {
             Instantiate(deathEffectPrefab, transform.position, transform.rotation); // 死亡エフェクトを生成
             Destroy(gameObject); // プレイヤーオブジェクトを破壊
-            //m_joyconL.SetRumble(160, 320, 0.6f, 200);
+            m_joyconL.SetRumble(160, 320, 0.6f, 200);
         }
     }
 
@@ -279,8 +286,21 @@ public class left_PlayerManager : MonoBehaviour
         }
     }
 
+    private void DetectVerticalShake(Vector3 accel)
+    {
+        float threshold = 1.0f; // 閾値の設定
+        if (accel.x > threshold)
+        {
+            Debug.Log("Vertical Shake Detected!");
+            // 縦振りが検出された場合の処理
+            animator.SetTrigger("attack"); // 攻撃アニメーションを再生
+            Instantiate(CriticalbulletPrefab, CriticalShotPoint.position, transform.rotation); // 弾を生成
+            leftCoolTime = coolTime;
+        }
+    }
 
-    private void OnGUI()
+
+        private void OnGUI()
     {
         var style = GUI.skin.GetStyle("label");
         style.fontSize = 24;
@@ -329,5 +349,4 @@ public class left_PlayerManager : MonoBehaviour
 
         GUILayout.EndHorizontal();
     }
-
 }

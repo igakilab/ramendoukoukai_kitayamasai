@@ -6,7 +6,8 @@ using DG.Tweening;
 using System;
 using System.Linq;
 using Unity.VisualScripting;
-using UnityEngine.SceneManagement;      //シーンの切り替えに必要
+using UnityEngine.SceneManagement;
+using System.Security.Cryptography;      //シーンの切り替えに必要
 
 public class left_PlayerManager : MonoBehaviour
 {
@@ -23,16 +24,31 @@ public class left_PlayerManager : MonoBehaviour
     public float attackRadius; // 攻撃範囲
     public Transform highShotPoint; // 高い位置のショットポイント
     public Transform lowShotPoint; // 低い位置のショットポイント
+    public Transform CriticalShotPoint; // 低い位置のショットポイント
     public Transform shotPoint; // ショットポイント
     public GameObject deathEffectPrefab; // 死亡エフェクトのプレハブ
     public GameObject GuardObject; // ガードオブジェクト
     public GameObject bulletPrefab; // 弾のプレハブ
+    public GameObject CriticalbulletPrefab; // 弾のプレハブ
+    public GameObject[] stockObject;
     public float jumpForce = 5f; // ジャンプ力
     public float jump_cnt = 0; // ジャンプ回数
     public bool isRight; // 右向きかどうか
     public float hp = 10; // ヒットポイント
+    public int CriticalPoint = 0;
+    public int i = 0;
+    public int cnt = 0;
     public float coolTime = 0.3f; //待機時間
     public float leftCoolTime; //待機している時間
+    public float forceAmount = 5f; // ふっとばす力の強さ
+    public Vector2 direction; // ふっとばす方向
+    public int stock = 3; // キャラクターの残機（ストック）
+    public Vector3 respawnPosition; // リスポーンする場所
+    public float respawnDelay = 3f; // リスポーンするまでの待機時間
+    public bool action_dead = false;
+    public bool action_guard = false;
+
+
     // HpGauge関連のフィールド
     [SerializeField] private Image healthImage;
     [SerializeField] private Image burnImage;
@@ -61,16 +77,32 @@ public class left_PlayerManager : MonoBehaviour
 
         m_joyconL = m_joycons.Find(c => c.isLeft);
         m_joyconR = m_joycons.Find(c => !c.isLeft);
+
+        respawnPosition  = transform.position;
     }
 
     private void Update()
     {
         JoyControll();
         Movement(); // 移動処理
-        Shot(); // ショット処理
-        Jump(); // ジャンプ処理
-        Guard(); // ガード処理
+        if(!action_dead)
+        {
+            Jump(); // ジャンプ処理
+            action_guard = false;
+            Guard(); // ガード処理
+            if(!action_guard)
+            {
+                Shot();
+                if (CriticalPoint == 5)
+                {
+                    CriticalShot();
+                }
+            }
+            
+        }
+        cnt = 0;
     }
+
 
     void Movement_1()
     {
@@ -102,18 +134,20 @@ public class left_PlayerManager : MonoBehaviour
             x += m_joyconL.GetStick()[0]; // 右Joy-Conの横軸入力を取得
         }
 
-        if (!isRight && x < 0)
+        if (!isRight && x > 0)
         {
             transform.Rotate(0f, 180f, 0f); // 右向きに回転
             isRight = true;
         }
-        if (isRight && x > 0)
+        if (isRight && x < 0)
         {
             transform.Rotate(0f, 180f, 0f); // 左向きに回転
             isRight = false;
         }
-
-        animator.SetFloat("Speed", Mathf.Abs(x)); // アニメーションの速度を設定
+        if (!action_dead)
+        {
+            animator.SetFloat("Speed", Mathf.Abs(x)); // アニメーションの速度を設定
+        }
         rb.velocity = new Vector2(x * moveSpeed, rb.velocity.y); // 移動速度を設定
     }
 
@@ -139,16 +173,34 @@ public class left_PlayerManager : MonoBehaviour
         }
     }
 
+    void CriticalShot()
+    {
+        if (m_joyconL.GetAccel()[0] > 2)
+        {
+            animator.SetTrigger("attack"); // 攻撃アニメーションを再生
+            int j;
+            for(j = 0; j < 10; j++)
+            {
+                Instantiate(CriticalbulletPrefab, CriticalShotPoint.position, transform.rotation); // 弾を生成
+            }
+            leftCoolTime = coolTime;
+            CriticalPoint = 0;
+            CriticalSetGauge(0f);
+        }
+    }
+
     void Jump()
     {
         Vector3 pos = rb.transform.position;
         if (jump_cnt < 2)
         {
-            if (Input.GetButtonDown("Jump"))
+            if (m_joyconL.GetButton(Joycon.Button.STICK))
             {
-                animator.SetTrigger("jump"); // ジャンプアニメーションを再生
-                rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse); // ジャンプ力を加える
-                jump_cnt++;
+                
+                    animator.SetTrigger("jump"); // ジャンプアニメーションを再生
+                    rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse); // ジャンプ力を加える
+                    jump_cnt++;
+                
             }
         }
         if (-2.65f < pos.y && pos.y < -2.50f)
@@ -161,12 +213,12 @@ public class left_PlayerManager : MonoBehaviour
     {
         float flag = 0;
 
-        if (m_joyconL.GetButton(Joycon.Button.DPAD_UP))
+        if (m_joyconL.GetButton(Joycon.Button.SHOULDER_1))
         {
             shotPoint = highShotPoint; // 高い位置でガード
             flag = 1;
         }
-        if (m_joyconL.GetButton(Joycon.Button.DPAD_LEFT))
+        if (m_joyconL.GetButton(Joycon.Button.SHOULDER_2))
         {
             shotPoint = lowShotPoint; // 低い位置でガード
             flag = 1;
@@ -174,6 +226,7 @@ public class left_PlayerManager : MonoBehaviour
 
         if (flag == 1)
         {
+            action_guard = true;
             animator.SetTrigger("guard"); // ガードアニメーションを再生
             Instantiate(GuardObject, shotPoint.position, transform.rotation); // ガードオブジェクトを生成
         }
@@ -181,15 +234,42 @@ public class left_PlayerManager : MonoBehaviour
 
     public void OnDamage()
     {
+        
         Debug.Log("ダメージを受けた"); // デバッグログを追加
         hp -= 1; // ヒットポイントを減少
         TakeDamage(0.1f); // HpGaugeの更新
+        //Fling(new Vector2(-1, 1));
+        if(hp > 1 && stock == 0)
+        {
+            
+        }
+        else
+        {
+            m_joyconL.SetRumble(160, 320, 0.6f, 200);
+        }
         if (hp <= 0)
         {
-            Instantiate(deathEffectPrefab, transform.position, transform.rotation); // 死亡エフェクトを生成
-            Destroy(gameObject); // プレイヤーオブジェクトを破壊
-            m_joyconL.SetRumble(160, 320, 0.6f, 200);
-            Load();
+            stock--; // 残機を減少
+
+            if (stock > 0)
+            {
+                hp = 10f;
+                CriticalPoint = 5;
+                HealthSetGauge(1f); // HpGaugeの初期化
+                CriticalSetGauge(0f);
+                // プレイヤーをリスポーン位置に移動
+                Destroy(stockObject[i]);
+                i++;
+                StartCoroutine(Respawn(rb));
+
+            }
+            else
+            {
+                Instantiate(deathEffectPrefab, transform.position, transform.rotation); // 死亡エフェクトを生成
+                Destroy(gameObject); // プレイヤーオブジェクトを破壊
+                Debug.Log("hogehoge");
+                Load();
+            }
         }
     }
 
@@ -249,6 +329,7 @@ public class left_PlayerManager : MonoBehaviour
 
     public void GuardClear(float rate)
     {
+        CriticalPoint++;
         CriticalSetGauge(criticalcurrentRate + rate);
     }
 
@@ -283,7 +364,7 @@ public class left_PlayerManager : MonoBehaviour
     }
 
 
-    private void OnGUI()
+    /*private void OnGUI()
     {
         var style = GUI.skin.GetStyle("label");
         style.fontSize = 24;
@@ -331,12 +412,49 @@ public class left_PlayerManager : MonoBehaviour
         }
 
         GUILayout.EndHorizontal();
+    }*/
+
+    public void Fling(Vector2 direction)
+    {
+        if (rb != null)
+        {
+            // 力を加える（2Dのワールド座標に基づく）
+            Debug.Log("吹っ飛ばす方向: " + direction);
+
+            animator.SetTrigger("addforce");
+            rb.AddForce(direction.normalized * 10f, ForceMode2D.Impulse);
+        }
+    }
+
+    private IEnumerator Respawn(Rigidbody2D rb)
+    {
+        Debug.Log("リスポーン待機中...");
+        
+        Physics2D.gravity = Vector2.zero;
+        // 数秒間待機
+        action_dead = true;
+        transform.position = respawnPosition;
+        yield return new WaitForSeconds(respawnDelay);
+        action_dead = false;
+        Physics2D.gravity = new Vector2(0, -9.81f);
+
+        Debug.Log("リスポーン完了");
     }
 
     //シーンを読み込む
     public void Load()
     {
         SceneManager.LoadScene(SceneName);
+    }
+
+    //接触開始
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.gameObject.tag == "Dead")
+        {
+            hp = 1;
+            OnDamage();
+        }
     }
 
 }

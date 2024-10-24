@@ -16,7 +16,7 @@ public class right_MagicManager : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("shield"))
+        if (collision.CompareTag("left_shield"))
         {
             Debug.Log("ÉKÅ[Éhê¨å˜right");
             Vector3 pos = rb.transform.position;
