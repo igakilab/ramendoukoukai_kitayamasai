@@ -21,6 +21,7 @@ public class left_PlayerManager : MonoBehaviour
         Enum.GetValues(typeof(Joycon.Button)) as Joycon.Button[];
 
     public float moveSpeed = 3f; // 移動速度
+    public AudioSource seAudioSource;
     public float attackRadius; // 攻撃範囲
     public Transform highShotPoint; // 高い位置のショットポイント
     public Transform lowShotPoint; // 低い位置のショットポイント
@@ -47,6 +48,13 @@ public class left_PlayerManager : MonoBehaviour
     public float respawnDelay = 3f; // リスポーンするまでの待機時間
     public bool action_dead = false;
     public bool action_guard = false;
+    // 元の色を保存するための変数
+    private Color originalColor;
+
+    // 変更する色
+    public Color newColor = Color.red;
+
+    private Renderer renderer;
 
 
     // HpGauge関連のフィールド
@@ -66,8 +74,10 @@ public class left_PlayerManager : MonoBehaviour
 
     void Start()
     {
+
         rb = GetComponent<Rigidbody2D>(); // Rigidbody2Dを取得
         animator = GetComponent<Animator>(); // Animatorを取得
+        renderer = GetComponent<Renderer>();
         HealthSetGauge(1f); // HpGaugeの初期化
         CriticalSetGauge(0f);
 
@@ -79,6 +89,7 @@ public class left_PlayerManager : MonoBehaviour
         m_joyconR = m_joycons.Find(c => !c.isLeft);
 
         respawnPosition  = transform.position;
+        originalColor = renderer.material.color;
     }
 
     private void Update()
@@ -93,7 +104,7 @@ public class left_PlayerManager : MonoBehaviour
             if(!action_guard)
             {
                 Shot();
-                if (CriticalPoint == 5)
+                if (CriticalPoint >= 5)
                 {
                     CriticalShot();
                 }
@@ -167,6 +178,7 @@ public class left_PlayerManager : MonoBehaviour
         }
         if (flag == 1 && leftCoolTime <= 0)
         {
+            PlaySound();
             animator.SetTrigger("attack"); // 攻撃アニメーションを再生
             Instantiate(bulletPrefab, shotPoint.position, transform.rotation); // 弾を生成
             leftCoolTime = coolTime;
@@ -238,15 +250,10 @@ public class left_PlayerManager : MonoBehaviour
         Debug.Log("ダメージを受けた"); // デバッグログを追加
         hp -= 1; // ヒットポイントを減少
         TakeDamage(0.1f); // HpGaugeの更新
+        ChangeColor();
+        Invoke("ResetColor", 0.1f);
+        
         //Fling(new Vector2(-1, 1));
-        if(hp > 1 && stock == 0)
-        {
-            
-        }
-        else
-        {
-            m_joyconL.SetRumble(160, 320, 0.6f, 200);
-        }
         if (hp <= 0)
         {
             stock--; // 残機を減少
@@ -254,12 +261,13 @@ public class left_PlayerManager : MonoBehaviour
             if (stock > 0)
             {
                 hp = 10f;
-                CriticalPoint = 5;
+                CriticalPoint = 0;
                 HealthSetGauge(1f); // HpGaugeの初期化
                 CriticalSetGauge(0f);
                 // プレイヤーをリスポーン位置に移動
                 Destroy(stockObject[i]);
                 i++;
+                rb.velocity = Vector3.zero;
                 StartCoroutine(Respawn(rb));
 
             }
@@ -454,6 +462,28 @@ public class left_PlayerManager : MonoBehaviour
         {
             hp = 1;
             OnDamage();
+        }
+    }
+
+    public void PlaySound()
+    {
+        seAudioSource.Play();
+    }
+
+    public void ChangeColor()
+    {
+        if (renderer != null)
+        {
+            renderer.material.color = newColor;
+        }
+    }
+
+    // 元の色に戻すメソッド
+    public void ResetColor()
+    {
+        if (renderer != null)
+        {
+            renderer.material.color = originalColor;
         }
     }
 
