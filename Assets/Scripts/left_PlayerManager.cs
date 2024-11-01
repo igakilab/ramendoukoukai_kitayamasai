@@ -4,8 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using System;
-using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine.SceneManagement;
 using System.Security.Cryptography;      //シーンの切り替えに必要
 
@@ -74,7 +72,7 @@ public class left_PlayerManager : MonoBehaviour
 
     void Start()
     {
-
+        
         rb = GetComponent<Rigidbody2D>(); // Rigidbody2Dを取得
         animator = GetComponent<Animator>(); // Animatorを取得
         renderer = GetComponent<Renderer>();
@@ -94,7 +92,6 @@ public class left_PlayerManager : MonoBehaviour
 
     private void Update()
     {
-        JoyControll();
         Movement(); // 移動処理
         if(!action_dead)
         {
@@ -115,51 +112,29 @@ public class left_PlayerManager : MonoBehaviour
     }
 
 
-    void Movement_1()
-    {
-        float x = Input.GetAxis("JoystickHorizontal"); // 方向キー横の入力を取得
-        if (!isRight && x > 0)
-        {
-            transform.Rotate(0f, 180f, 0f); // 右向きに回転
-            isRight = true;
-        }
-        if (isRight && x < 0)
-        {
-            transform.Rotate(0f, 180f, 0f); // 左向きに回転
-            isRight = false;
-        }
-        animator.SetFloat("Speed", Mathf.Abs(x)); // アニメーションの速度を設定
-        rb.velocity = new Vector2(x * moveSpeed, rb.velocity.y); // 移動速度を設定
-    }
-
     void Movement()
     {
-        // Joy-Conのスティック入力を取得
         float x = 0f;
-        //if (m_joyconL != null)
-        //{
-        //    x += m_joyconL.GetStick()[0]; // 左Joy-Conの横軸入力を取得
-        //}
         if (m_joyconL != null)
         {
-            x += m_joyconL.GetStick()[0]; // 右Joy-Conの横軸入力を取得
+            x += m_joyconL.GetStick()[0]; 
         }
 
         if (!isRight && x > 0)
         {
-            transform.Rotate(0f, 180f, 0f); // 右向きに回転
+            transform.Rotate(0f, 180f, 0f); 
             isRight = true;
         }
         if (isRight && x < 0)
         {
-            transform.Rotate(0f, 180f, 0f); // 左向きに回転
+            transform.Rotate(0f, 180f, 0f); 
             isRight = false;
         }
         if (!action_dead)
         {
-            animator.SetFloat("Speed", Mathf.Abs(x)); // アニメーションの速度を設定
+            animator.SetFloat("Speed", Mathf.Abs(x)); 
         }
-        rb.velocity = new Vector2(x * moveSpeed, rb.velocity.y); // 移動速度を設定
+        rb.velocity = new Vector2(x * moveSpeed, rb.velocity.y); 
     }
 
     void Shot()
@@ -168,19 +143,19 @@ public class left_PlayerManager : MonoBehaviour
         float flag = 0;
         if (m_joyconL.GetButton(Joycon.Button.DPAD_RIGHT))
         {
-            shotPoint = highShotPoint; // 高い位置からショット
+            shotPoint = highShotPoint; 
             flag = 1;
         }
         if (m_joyconL.GetButton(Joycon.Button.DPAD_DOWN))
         {
-            shotPoint = lowShotPoint; // 低い位置からショット
+            shotPoint = lowShotPoint; 
             flag = 1;
         }
         if (flag == 1 && leftCoolTime <= 0)
         {
             PlaySound();
-            animator.SetTrigger("attack"); // 攻撃アニメーションを再生
-            Instantiate(bulletPrefab, shotPoint.position, transform.rotation); // 弾を生成
+            animator.SetTrigger("attack"); 
+            Instantiate(bulletPrefab, shotPoint.position, transform.rotation); 
             leftCoolTime = coolTime;
         }
     }
@@ -189,11 +164,11 @@ public class left_PlayerManager : MonoBehaviour
     {
         if (m_joyconL.GetAccel()[0] > 2)
         {
-            animator.SetTrigger("attack"); // 攻撃アニメーションを再生
+            animator.SetTrigger("attack"); 
             int j;
             for(j = 0; j < 10; j++)
             {
-                Instantiate(CriticalbulletPrefab, CriticalShotPoint.position, transform.rotation); // 弾を生成
+                Instantiate(CriticalbulletPrefab, CriticalShotPoint.position, transform.rotation); 
             }
             leftCoolTime = coolTime;
             CriticalPoint = 0;
@@ -209,15 +184,15 @@ public class left_PlayerManager : MonoBehaviour
             if (m_joyconL.GetButton(Joycon.Button.STICK))
             {
                 
-                    animator.SetTrigger("jump"); // ジャンプアニメーションを再生
-                    rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse); // ジャンプ力を加える
+                    animator.SetTrigger("jump"); 
+                    rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse); 
                     jump_cnt++;
                 
             }
         }
         if (-2.65f < pos.y && pos.y < -2.50f)
         {
-            jump_cnt = 0; // ジャンプ回数をリセット
+            jump_cnt = 0; 
         }
     }
 
@@ -227,44 +202,41 @@ public class left_PlayerManager : MonoBehaviour
 
         if (m_joyconL.GetButton(Joycon.Button.SHOULDER_1))
         {
-            shotPoint = highShotPoint; // 高い位置でガード
+            shotPoint = highShotPoint; 
             flag = 1;
         }
         if (m_joyconL.GetButton(Joycon.Button.SHOULDER_2))
         {
-            shotPoint = lowShotPoint; // 低い位置でガード
+            shotPoint = lowShotPoint; 
             flag = 1;
         }
 
         if (flag == 1)
         {
             action_guard = true;
-            animator.SetTrigger("guard"); // ガードアニメーションを再生
-            Instantiate(GuardObject, shotPoint.position, transform.rotation); // ガードオブジェクトを生成
+            animator.SetTrigger("guard"); 
+            Instantiate(GuardObject, shotPoint.position, transform.rotation); 
         }
     }
 
     public void OnDamage()
     {
         
-        Debug.Log("ダメージを受けた"); // デバッグログを追加
-        hp -= 1; // ヒットポイントを減少
-        TakeDamage(0.1f); // HpGaugeの更新
+        hp -= 1; 
+        TakeDamage(0.1f); 
         ChangeColor();
         Invoke("ResetColor", 0.1f);
-        
-        //Fling(new Vector2(-1, 1));
         if (hp <= 0)
         {
-            stock--; // 残機を減少
+            stock--; 
 
             if (stock > 0)
             {
                 hp = 10f;
                 CriticalPoint = 0;
-                HealthSetGauge(1f); // HpGaugeの初期化
+                HealthSetGauge(1f); 
                 CriticalSetGauge(0f);
-                // プレイヤーをリスポーン位置に移動
+     
                 Destroy(stockObject[i]);
                 i++;
                 rb.velocity = Vector3.zero;
@@ -273,9 +245,8 @@ public class left_PlayerManager : MonoBehaviour
             }
             else
             {
-                Instantiate(deathEffectPrefab, transform.position, transform.rotation); // 死亡エフェクトを生成
-                Destroy(gameObject); // プレイヤーオブジェクトを破壊
-                Debug.Log("hogehoge");
+                Instantiate(deathEffectPrefab, transform.position, transform.rotation); 
+                Destroy(gameObject);
                 Load();
             }
         }
@@ -308,23 +279,11 @@ public class left_PlayerManager : MonoBehaviour
 
     public void CriticalSetGauge(float value)
     {
-        //DoTweenを連結して動かす
         CriticalImage.DOFillAmount(value, duration);
-        //.OnComplete(() =>
-        //   {
-        //      burnImage
-        //           .DOFillAmount(value, duration / 2f)
-        //           .SetDelay(0.5f);
-        //  });
-        //transform.DOShakePosition(
-        //    duration / 2f,
-        //   strength, vibrate);
-
-        // シェーダーの確認
+        
         Material material = CriticalImage.material;
         Debug.Log("使用しているシェーダー: " + material.shader.name);
 
-        // マテリアルのプロパティ確認
         Debug.Log("マテリアルのプロパティ: " + material.GetTexture("_MainTex"));
 
         criticalcurrentRate = value;
@@ -339,99 +298,6 @@ public class left_PlayerManager : MonoBehaviour
     {
         CriticalPoint++;
         CriticalSetGauge(criticalcurrentRate + rate);
-    }
-
-
-    private void JoyControll()
-    {
-        m_pressedButtonL = null;
-        m_pressedButtonR = null;
-
-        if (m_joycons == null || m_joycons.Count <= 0) return;
-
-        foreach (var button in m_buttons)
-        {
-            if (m_joyconL.GetButton(button))
-            {
-                m_pressedButtonL = button;
-            }
-            if (m_joyconR.GetButton(button))
-            {
-                m_pressedButtonR = button;
-            }
-        }
-
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
-            m_joyconL.SetRumble(160, 320, 0.6f, 200);
-        }
-        if (Input.GetKeyDown(KeyCode.X))
-        {
-            m_joyconR.SetRumble(160, 320, 0.6f, 200);
-        }
-    }
-
-
-    /*private void OnGUI()
-    {
-        var style = GUI.skin.GetStyle("label");
-        style.fontSize = 24;
-
-        if (m_joycons == null || m_joycons.Count <= 0)
-        {
-            GUILayout.Label("Joy-Con が接続されていません");
-            return;
-        }
-
-        if (!m_joycons.Any(c => c.isLeft))
-        {
-            GUILayout.Label("Joy-Con (L) が接続されていません");
-            return;
-        }
-
-        if (!m_joycons.Any(c => !c.isLeft))
-        {
-            GUILayout.Label("Joy-Con (R) が接続されていません");
-            return;
-        }
-
-        GUILayout.BeginHorizontal(GUILayout.Width(960));
-
-        foreach (var joycon in m_joycons)
-        {
-            var isLeft = joycon.isLeft;
-            var name = isLeft ? "Joy-Con (L)" : "Joy-Con (R)";
-            var key = isLeft ? "Z キー" : "X キー";
-            var button = isLeft ? m_pressedButtonL : m_pressedButtonR;
-            var stick = joycon.GetStick();
-            var gyro = joycon.GetGyro();
-            var accel = joycon.GetAccel();
-            var orientation = joycon.GetVector();
-
-            GUILayout.BeginVertical(GUILayout.Width(480));
-            GUILayout.Label(name);
-            GUILayout.Label(key + "：振動");
-            GUILayout.Label("押されているボタン：" + button);
-            GUILayout.Label(string.Format("スティック：({0}, {1})", stick[0], stick[1]));
-            GUILayout.Label("ジャイロ：" + gyro);
-            GUILayout.Label("加速度：" + accel);
-            GUILayout.Label("傾き：" + orientation);
-            GUILayout.EndVertical();
-        }
-
-        GUILayout.EndHorizontal();
-    }*/
-
-    public void Fling(Vector2 direction)
-    {
-        if (rb != null)
-        {
-            // 力を加える（2Dのワールド座標に基づく）
-            Debug.Log("吹っ飛ばす方向: " + direction);
-
-            animator.SetTrigger("addforce");
-            rb.AddForce(direction.normalized * 10f, ForceMode2D.Impulse);
-        }
     }
 
     private IEnumerator Respawn(Rigidbody2D rb)
@@ -477,8 +343,6 @@ public class left_PlayerManager : MonoBehaviour
             renderer.material.color = newColor;
         }
     }
-
-    // 元の色に戻すメソッド
     public void ResetColor()
     {
         if (renderer != null)

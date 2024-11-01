@@ -14,8 +14,6 @@ public class right_PlayerManager : MonoBehaviour
     private Joycon.Button? m_pressedButtonL;
     private Joycon.Button? m_pressedButtonR;
 
-    //private static readonly Joycon.Button[] m_buttons =
-      //  Enum.GetValues(typeof(Joycon.Button)) as Joycon.Button[];
 
     public float moveSpeed = 3f; // 移動速度
     public AudioSource seAudioSource;
@@ -106,31 +104,9 @@ public class right_PlayerManager : MonoBehaviour
         }
     }
 
-    void Movement_1()
-    {
-        float x = Input.GetAxisRaw("Horizontal"); // 方向キー横の入力を取得
-        if (!isRight && x > 0)
-        {
-            transform.Rotate(0f, 180f, 0f); // 右向きに回転
-            isRight = true;
-        }
-        if (isRight && x < 0)
-        {
-            transform.Rotate(0f, 180f, 0f); // 左向きに回転
-            isRight = false;
-        }
-        animator.SetFloat("Speed", Mathf.Abs(x)); // アニメーションの速度を設定
-        rb.velocity = new Vector2(x * moveSpeed, rb.velocity.y); // 移動速度を設定
-    }
-
     void Movement()
     {
-        // Joy-Conのスティック入力を取得
         float x = 0f;
-        //if (m_joyconL != null)
-        //{
-        //    x += m_joyconL.GetStick()[0]; // 左Joy-Conの横軸入力を取得
-        //}
         if (m_joyconL != null)
         {
             x += m_joyconR.GetStick()[0]; // 右Joy-Conの横軸入力を取得
@@ -280,9 +256,6 @@ public class right_PlayerManager : MonoBehaviour
                     .DOFillAmount(value, duration / 2f)
                     .SetDelay(0.5f);
             });
-        //transform.DOShakePosition(
-        //    duration / 2f,
-        //   strength, vibrate);
 
         healthcurrentRate = value;
     }
@@ -291,15 +264,6 @@ public class right_PlayerManager : MonoBehaviour
     {
         //DoTweenを連結して動かす
         CriticalImage.DOFillAmount(value, duration);
-        //.OnComplete(() =>
-        //   {
-        //      burnImage
-        //           .DOFillAmount(value, duration / 2f)
-        //           .SetDelay(0.5f);
-        //  });
-        //transform.DOShakePosition(
-        //    duration / 2f,
-        //   strength, vibrate);
 
         criticalcurrentRate = value;
     }
