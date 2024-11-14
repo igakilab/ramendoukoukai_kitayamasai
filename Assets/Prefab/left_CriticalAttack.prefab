@@ -19500,6 +19500,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 0
+  damage: 10
   flag: 0
 --- !u!114 &7853971782798991116
 MonoBehaviour:

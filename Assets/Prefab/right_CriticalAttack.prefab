@@ -14679,6 +14679,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 0
+  damege: 10
   flag: 0
 --- !u!1 &8166507890170491803
 GameObject:
