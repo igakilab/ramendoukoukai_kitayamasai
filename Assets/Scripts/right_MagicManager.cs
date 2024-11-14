@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class right_MagicManager : MonoBehaviour
 {
+   
     public float speed = -10f; // ’e‚Ì‘¬“x
+    public float damege;
     public float flag = 0;
     Rigidbody2D rb;
 
@@ -19,6 +21,7 @@ public class right_MagicManager : MonoBehaviour
         if (collision.CompareTag("left_shield"))
         {
             Debug.Log("ƒK[ƒh¬Œ÷right");
+         
             Vector3 pos = rb.transform.position;
             transform.position = new Vector3(pos.x, pos.y, -100);
             flag = 1;
@@ -35,10 +38,11 @@ public class right_MagicManager : MonoBehaviour
             else if (flag == 0) 
             {
                 Debug.Log("UŒ‚right");
-                Player1.OnDamage(); // ƒ_ƒ[ƒW‚ğ—^‚¦‚é
+                Player1.OnDamage(damege); // ƒ_ƒ[ƒW‚ğ—^‚¦‚é
             }
             Destroy(gameObject); // ’e‚ğ”j‰ó
         }
     }
+
 }
 

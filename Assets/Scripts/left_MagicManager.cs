@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class left_MagicManager : MonoBehaviour
 {
+   
     public float speed = -10f; // ’e‚Ì‘¬“x
+    public float damage;
     public float flag = 0;
     Rigidbody2D rb;
 
@@ -34,7 +36,7 @@ public class left_MagicManager : MonoBehaviour
             else if (flag == 0)
             {
                 Debug.Log("UŒ‚right");
-                Player2.OnDamage(); // ƒ_ƒ[ƒW‚ğ—^‚¦‚é
+                Player2.OnDamage(damage); // ƒ_ƒ[ƒW‚ğ—^‚¦‚é
             }
             Destroy(gameObject); // ’e‚ğ”j‰ó
         }

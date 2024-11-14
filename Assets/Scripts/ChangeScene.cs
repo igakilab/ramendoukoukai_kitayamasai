@@ -1,28 +1,27 @@
+using System.Collections;
 using System.Collections.Generic;
-using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
-public class SceneChangeOnClick : MonoBehaviour
+public class ChangeScene : MonoBehaviour
 {
     public string sceneName;  // 遷移するシーンの名前
-    public Button myButton;   // ボタンの参照
+    //public Button myButton;   // ボタンの参照
 
 
-    private List<Joycon> m_joycons;
+    /*private List<Joycon> m_joycons;
     private Joycon m_joyconL;
     private Joycon m_joyconR;
     private Joycon.Button? m_pressedButtonL;
     private Joycon.Button? m_pressedButtonR;
 
     private static readonly Joycon.Button[] m_buttons =
-        Enum.GetValues(typeof(Joycon.Button)) as Joycon.Button[];
+        Enum.GetValues(typeof(Joycon.Button)) as Joycon.Button[];*/
 
-    private void Start()
+    void Start()
     {
         // ボタンクリック時にOnButtonClickメソッドを呼び出す
-        myButton.onClick.AddListener(OnButtonClick);
+        //myButton.onClick.AddListener(OnButtonClick);
 
         /*m_joycons = JoyconManager.Instance.j;
 
@@ -32,7 +31,7 @@ public class SceneChangeOnClick : MonoBehaviour
         m_joyconR = m_joycons.Find(c => !c.isLeft);*/
     }
 
-    private void Update()
+    void Update()
     {
         //PushJoyCon();
     }
@@ -54,10 +53,8 @@ public class SceneChangeOnClick : MonoBehaviour
 
         
     }*/
-    private void OnButtonClick()
+    public void Load()
     {
-        // シーンをロードする
-        Resources.UnloadUnusedAssets();
         SceneManager.LoadScene(sceneName);
     }
 
