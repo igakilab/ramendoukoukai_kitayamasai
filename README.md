@@ -45,33 +45,52 @@ Joy-conを用いて、2人でプレイする魔法やガードを駆使して戦
 マウスカーソルをEndボタンにもっていき、Endボタンを押すことでゲーム画面に遷移する。 
 
 ## 索引 
+
   環境のセットアップ 
+  
   ・unityhub:https://unity.com/ja/download 
+  
   ・DOTween:DOTween (HOTween v2) | Animation Tools | Unity Asset Store 
   
-BGM 
+BGM
+
   ・開始画面のBGM：https://www.youtube.com/watch?v=I6vf4lfQazw&list=PLeJ3sKdOWy3PeUmbTgVysQcLFJTP-eG9b&index=4  
+  
   ・バトル中のBGM：https://www.youtube.com/watch?v=W_j-Pdn7h7o  
+  
   ・終了画面のBGM：https://www.youtube.com/watch?v=08hfyE88Th4&list=RD08hfyE88Th4&start_radio=1  
 
 キャラクターのオブジェクトまたはSE
+
   ・キャラクターアセット:　https://www.shoeisha.co.jp/book/download/9784798179353/detail　 
+  
   ・白背景:Cute 2D Girl - Wizard | 2D Characters | Unity Asset Store 
+  
   ・シールドエフェクト:Miniature Army 2D V.1 [Medieval Style] | 2D Characters | Unity Asset Store 
+  
   ・死亡音:https://arspark.jp/material/wp-content/uploads/2023/05/arsnd_00139_deathon.mp3 
+  
   ・リスポーン音:https://arspark.jp/material/wp-content/uploads/2023/08/arsnd_00237_powerupp.mp3 
+  
   ・ダメージ音:https://www.springin.org/wp-content/uploads/2022/07/スクラッチ.mp3　 
+  
   ・ガード成功時:https://www.springin.org/wp-content/uploads/2022/06/剣ぶつかり合い2.mp3　 
+  
   ・必殺音:https://www.springin.org/wp-content/uploads/2022/06/爆発.mp3 
+  
   ・ゲーム終了時の音:https://arspark.jp/material/wp-content/uploads/202 3/04/arsnd_00043_gameclea.mp3 
+  
   ・ジャンプの音:https://umipla.com/sekoubou/soundeffect/se_jump.mp3　 
 
-### 参考文献 
-キャラクターや床などのアセットは株式会社翔泳社 STUDIO SHIN（スタジオ シン）様からお借りしています． 
+### 参考文献
+
+  キャラクターや床などのアセットは株式会社翔泳社 STUDIO SHIN（スタジオ シン）様からお借りしています． 
 
 ## Author 
 国元優作 
+
 中村友大 
+
 長原冬真 
 
  
