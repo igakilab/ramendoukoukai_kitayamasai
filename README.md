@@ -1,96 +1,77 @@
-# WIZARD WAR 
-Joy-conを用いて、2人でプレイする魔法やガードを駆使して戦う1対1の対戦型格闘ゲームです。 
-
-# 準備 
+# セットアップマニュアル 
 ### UnityHubのダウンロード 
-  1. https://unity.com/ja/download からunityhubをインストールする。 
-  2. UnityHubのInstallsタブのInstallEditerから2022.3.40f1を選択する。 
-
-### Unityプロジェクトのダウンロード 
-  1. githubにてunityプロジェクトをダウンロードする。 
-  2. UnityHubを開きエディタバージョン2022.3.40f1で当プロジェクトを開く。 
-  3. お使いのWindowsOSに合わせて64bitか32bitでビルドを行う。 
+  1. [こちらからダウンロード](https://unity.com/ja/download)からunityhubをインストールする。  
+  2. [バージョンはこちら](https://unity.com/ja/releases/editor/archive)から2022.3.40f1を選択し、「INSTALL」をクリックする。  
+  3. UnityHubが開くので、「Continue」をクリックし、ダウンロードする。  
 
 ### WIZARD WARのダウンロード 
-  [WIZARD WARのリポジトリ]( https://github.com/igakilab/ramendoukoukai_kitayamasai)にある`Code`から`Download ZIP`を選択し、ダウンロード後解凍してください。解凍する場所はUnityHubです。 
+  [WIZARD WARのリポジトリ]( https://github.com/igakilab/ramendoukoukai_kitayamasai)にある`Code`から`Download ZIP`を選択し、ダウンロード後解凍してください。  
+  解凍する場所は指定していません。   
 
-### アセットのダウンロード 
-  1.ラーメン同好会の中にある「UniSideGame_Assets(ラーメン同好会)」をダウンロード後解凍してください。 
-  2.解答場所は先ほどダウンロードしたフォルダの中の「Assets」の中に解凍してください。 
+### アセットのダウンロード  
+  1.OneDriveの[ラーメン同好会](https://oskit-my.sharepoint.com/personal/hiroshi_igaki_oit_ac_jp/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fhiroshi%5Figaki%5Foit%5Fac%5Fjp%2FDocuments%2FIgakiLabDir%2Fkitayamasai%2F2024%2F%E3%83%A9%E3%83%BC%E3%83%A1%E3%83%B3%E5%90%8C%E5%A5%BD%E4%BC%9A&e=5%3A0e4709f65e0e4edf9f59640f88587280&sharingv2=true&fromShare=true&at=9&CID=efeaf146%2D0cb9%2D4cd6%2D8439%2Da30d3a463a4a&FolderCTID=0x0120004A6087FF5B53FE4FB6552B4572075364&view=0)の中にある「KY_effects、Miniature Army 2D V.1、UniSideGame_Assets、Wizard - 2D Character」をダウンロード後解凍してください。  
+  2.解凍場所は先ほどダウンロードしたフォルダ(ramendoukoukai_kitayamasai-main)の中の「ramendoukoukai_kitayamasai-main/Assets」の中に解凍してください。
+
+### Unityの起動
+  1.UnityHubを起動します。  
+  2.Projectsの「add」をクリックしてください。  
+  3.「ramendoukoukai_kitayamasai-main」を選択して、 Unityを起動します。  
+
+### DOTweenのダウンロード
+  1.Unityを起動後、上部のWindowから、Asset Storeを選択してください。  
+  2.「DOTween」と検索し、ダウンロードしてください。  
+  3.ダウンロード後、Unityの画面に戻り、上部のWindowから、Package Managerを選択してください。  
+  4.左上のタブを「My Assets」へ変更します。  
+  5.右の検索欄から、DOTweenと検索します。  
+  6.左の欄の「DOTween（HOTween v2）」を選択します。  
+  7.ImportまたはDownloadをクリックして下さい。   
+  8.インポートが完了するとDOTweenのウィンドウが表示され、「Open DOTween Utility Panel」をクリックして設定画面に進みます。  
+  9.「Setup DOTween」ボタンをクリックします。  
+  10.しばらくすると、「DOTween Unity Panel」が表示になるのでウィンドウを閉じます。  
+  
+  ※詳しいセットアップ方法については以下の参考文献を参考しています。  
+  [参考文献](https://shibuya24.info/entry/unity-install-dotween)
+
+# 運用マニュアル
+### WIZARD WAR 
+Joy-conを用いて、2人でプレイする魔法やガードを駆使して戦う1対1の対戦型格闘ゲームです。 
 
 ### Joy-Conの接続 
-  1. PCの設定内、デバイスからBluetooth接続を開く 
-  2. JoyConのシンクロボタン(側面の押しにくいボタン)を長押し 
-  3. PCのデバイス一覧からJoyConの左右を探し接続する 
+  1. PCの設定内、デバイスからBluetooth接続を開く   
+  2. JoyConのシンクロボタン(側面の押しにくいボタン)を長押し  
+  3. PCのデバイス一覧からJoyConの左右を探し接続する  
 
-### 起動 
-  1. UnityHubを起動し、「Add」をクリックすると、エディタが表示されるので、「ramendoukoukai_kitayamasai」を選択してください。 
-  2.起動したら、上部にある「▶」再生ボタンをクリックするとゲームが起動します。 
-
-## Features 
-  joyConのボタンを押す・振るといった基本操作で遊ぶ、1対1で戦う対戦ゲームです。 
+### 起動  
+  上部にある「▶」再生ボタンをクリックするとゲームが起動します。
 
 ### Title画面 
   マウスカーソルをSTARTボタンにもっていき、STARTボタンを押すことでゲーム画面に遷移する。 
 
 ### game画面 
 ※joyConは縦にもって使う 
-  1. 魔法を打つ…Aボタンまたは→ボタンで上攻撃、Bボタンまたは↓ボタンで下攻撃 
-  2. ガードする…RボタンまたはLボタンで上ガード、ZRボタンまたはZLボタンで↓ガード 
-  3. ジャンプする…STICKを押し込むとジャンプ 
-  4. 移動…STICKを左右に傾けると移動 
-  5. 必殺技…ゲージを貯めてjoyConを縦に振る 
+  1. 魔法を打つ…Aボタンまたは→ボタンで上攻撃、Bボタンまたは↓ボタンで下攻撃  
+  2. ガードする…RボタンまたはLボタンで上ガード、ZRボタンまたはZLボタンで↓ガード  
+  3. ジャンプする…STICKを押し込むとジャンプ  
+  4. 移動…STICKを左右に傾けると移動  
+  5. 必殺技…ゲージを貯めてjoyConを縦に振る  
 
 ### Result画面 
-マウスカーソルをEndボタンにもっていき、Endボタンを押すことでゲーム画面に遷移する。 
+マウスカーソルをEndボタンにもっていき、Endボタンを押すことでゲーム画面に遷移する。  
 
-## 索引 
+# 索引
+**環境のセットアップ**  
+  ・[unityhub](https://unity.com/ja/download)  
 
-  環境のセットアップ 
-  
-  ・unityhub:https://unity.com/ja/download 
-  
-  ・DOTween:DOTween (HOTween v2) | Animation Tools | Unity Asset Store 
-  
-BGM
+**Unity Asset Store**  
+  ・DOTween:DOTween (HOTween v2) | Animation Tools | Unity Asset Store  
 
-  ・開始画面のBGM：https://www.youtube.com/watch?v=I6vf4lfQazw&list=PLeJ3sKdOWy3PeUmbTgVysQcLFJTP-eG9b&index=4  
-  
-  ・バトル中のBGM：https://www.youtube.com/watch?v=W_j-Pdn7h7o  
-  
-  ・終了画面のBGM：https://www.youtube.com/watch?v=08hfyE88Th4&list=RD08hfyE88Th4&start_radio=1  
+**キャラクターなどのアセット**  
+  ・[アセット](https://oskit-my.sharepoint.com/personal/hiroshi_igaki_oit_ac_jp/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fhiroshi%5Figaki%5Foit%5Fac%5Fjp%2FDocuments%2FIgakiLabDir%2Fkitayamasai%2F2024%2F%E3%83%A9%E3%83%BC%E3%83%A1%E3%83%B3%E5%90%8C%E5%A5%BD%E4%BC%9A&e=5%3A0e4709f65e0e4edf9f59640f88587280&sharingv2=true&fromShare=true&at=9&CID=efeaf146%2D0cb9%2D4cd6%2D8439%2Da30d3a463a4a&FolderCTID=0x0120004A6087FF5B53FE4FB6552B4572075364&view=0)
 
-キャラクターのオブジェクトまたはSE
-
-  ・キャラクターアセット:　https://www.shoeisha.co.jp/book/download/9784798179353/detail　 
-  
-  ・白背景:Cute 2D Girl - Wizard | 2D Characters | Unity Asset Store 
-  
-  ・シールドエフェクト:Miniature Army 2D V.1 [Medieval Style] | 2D Characters | Unity Asset Store 
-  
-  ・死亡音:https://arspark.jp/material/wp-content/uploads/2023/05/arsnd_00139_deathon.mp3 
-  
-  ・リスポーン音:https://arspark.jp/material/wp-content/uploads/2023/08/arsnd_00237_powerupp.mp3 
-  
-  ・ダメージ音:https://www.springin.org/wp-content/uploads/2022/07/スクラッチ.mp3　 
-  
-  ・ガード成功時:https://www.springin.org/wp-content/uploads/2022/06/剣ぶつかり合い2.mp3　 
-  
-  ・必殺音:https://www.springin.org/wp-content/uploads/2022/06/爆発.mp3 
-  
-  ・ゲーム終了時の音:https://arspark.jp/material/wp-content/uploads/202 3/04/arsnd_00043_gameclea.mp3 
-  
-  ・ジャンプの音:https://umipla.com/sekoubou/soundeffect/se_jump.mp3　 
-
-### 参考文献
-
+# 参考文献
   キャラクターや床などのアセットは株式会社翔泳社 STUDIO SHIN（スタジオ シン）様からお借りしています． 
 
-## Author 
-国元優作 
-
-中村友大 
-
-長原冬真 
-
- 
+# Author
+国元優作  
+中村友大  
+長原冬真  
